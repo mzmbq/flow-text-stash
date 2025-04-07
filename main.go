@@ -88,13 +88,31 @@ func wrap(s string) string {
 	return fmt.Sprintf("%s...", s[0:17])
 }
 
+func listAllStashes() *flow.Response {
+	res := &flow.Response{
+		Results: []flow.Result{},
+	}
+	for k, v := range store.Store {
+		res.Results = append(res.Results, flow.Result{
+			Title:    k,
+			SubTitle: wrap(v),
+			IcoPath:  "paste.png",
+			RpcAction: &flow.JsonRpcAction{
+				Method:     "paste",
+				Parameters: []string{v},
+			},
+		})
+	}
+	return res
+}
+
 func handleQuery(req *flow.Request) *flow.Response {
 	res := &flow.Response{
 		Results: []flow.Result{},
 	}
 	target := req.Parameters[0]
 	if target == "" {
-		return res
+		return listAllStashes()
 	}
 	matches := store.GetFuzzy(target)
 
