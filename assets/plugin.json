@@ -1,0 +1,13 @@
+{
+  "$schema": "https://www.flowlauncher.com/schemas/plugin.schema.json",
+  "ID": "5fbda8fb-afe8-4f03-a580-fed447ef0c54",
+  "ActionKeywords": ["ts"],
+  "Name": "TextStash",
+  "Description": "Store and quickly retrieve text snippets",
+  "Author": "mzmbq",
+  "Version": "0.1",
+  "Language": "executable",
+  "Website": "https://github.com/mzmbq/flow-text-stash",
+  "IcoPath": "./icon.png",
+  "ExecuteFileName": "ts.exe"
+}
