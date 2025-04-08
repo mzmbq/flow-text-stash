@@ -5,7 +5,7 @@
   "Name": "TextStash",
   "Description": "Store and quickly retrieve text snippets",
   "Author": "mzmbq",
-  "Version": "0.1",
+  "Version": "0.1.0",
   "Language": "executable",
   "Website": "https://github.com/mzmbq/flow-text-stash",
   "IcoPath": "./icon.png",

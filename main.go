@@ -88,12 +88,10 @@ func wrap(s string) string {
 	return fmt.Sprintf("%s...", s[0:17])
 }
 
-func listAllStashes() *flow.Response {
-	res := &flow.Response{
-		Results: []flow.Result{},
-	}
+func listAllStashes(req *flow.Request) *flow.Response {
+	res := flow.NewResponse(req)
 	for k, v := range store.Store {
-		res.Results = append(res.Results, flow.Result{
+		res.AddResult(&flow.Result{
 			Title:    k,
 			SubTitle: wrap(v),
 			IcoPath:  "paste.png",
@@ -107,19 +105,17 @@ func listAllStashes() *flow.Response {
 }
 
 func handleQuery(req *flow.Request) *flow.Response {
-	res := &flow.Response{
-		Results: []flow.Result{},
-	}
+	res := flow.NewResponse(req)
 	target := req.Parameters[0]
 	if target == "" {
-		return listAllStashes()
+		return listAllStashes(req)
 	}
 	matches := store.GetFuzzy(target)
 
 	// List matches
 	for _, m := range matches {
 		val := store.Store[m]
-		res.Results = append(res.Results, flow.Result{
+		res.AddResult(&flow.Result{
 			Title:    m,
 			SubTitle: wrap(val),
 			IcoPath:  "paste.png",
@@ -132,7 +128,7 @@ func handleQuery(req *flow.Request) *flow.Response {
 
 	// List create option for when no matches or no exact match was found
 	if len(matches) == 0 || matches[0] != target {
-		res.Results = append(res.Results, flow.Result{
+		res.AddResult(&flow.Result{
 			Title:    fmt.Sprintf("Create a paste: %s", target),
 			SubTitle: "",
 			IcoPath:  "add.png",
