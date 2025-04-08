@@ -1,5 +1,5 @@
 # Flow Text Stash
 
-A Flow Launcher Plugin to store and retrieve text snippets.
+A Flow Launcher plugin for storing and retrieving text snippets.
 
 ![alt text](demo.gif)
