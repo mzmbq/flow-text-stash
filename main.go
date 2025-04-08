@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"slices"
 	"sort"
@@ -94,7 +95,7 @@ func listAllStashes(req *flow.Request) *flow.Response {
 		res.AddResult(&flow.Result{
 			Title:    k,
 			SubTitle: wrap(v),
-			IcoPath:  "paste.png",
+			IcoPath:  "pencil.png",
 			RpcAction: &flow.JsonRpcAction{
 				Method:     "paste",
 				Parameters: []string{v},
@@ -118,7 +119,7 @@ func handleQuery(req *flow.Request) *flow.Response {
 		res.AddResult(&flow.Result{
 			Title:    m,
 			SubTitle: wrap(val),
-			IcoPath:  "paste.png",
+			IcoPath:  "pencil.png",
 			RpcAction: &flow.JsonRpcAction{
 				Method:     "paste",
 				Parameters: []string{val},
@@ -168,6 +169,14 @@ func handlePaste(params []string) *flow.Response {
 	return nil
 }
 
+func handleOpenData([]string) *flow.Response {
+	cmd := exec.Command("cmd", "/c", "start", store.Path)
+	if err := cmd.Run(); err != nil {
+		log.Printf("Error opening file: %v", err)
+	}
+	return nil
+}
+
 func getDataDir() string {
 	config, err := os.UserConfigDir()
 	if err != nil {
@@ -179,6 +188,21 @@ func getDataDir() string {
 		log.Fatal(err)
 	}
 	return data
+}
+
+func handleCtxMenu(req *flow.Request) *flow.Response {
+	res := flow.NewResponse(req)
+	res.AddResult(&flow.Result{
+		Title:    "Edit stashes",
+		SubTitle: "Open data.yaml",
+		IcoPath:  "pencil.png",
+		RpcAction: &flow.JsonRpcAction{
+			Method:     "open_data",
+			Parameters: make([]string, 0),
+		},
+	})
+
+	return res
 }
 
 func main() {
@@ -196,6 +220,8 @@ func main() {
 	p.Query(handleQuery)
 	p.Action("paste", handlePaste)
 	p.Action("create", handleCreate)
+	p.Action("open_data", handleOpenData)
+	p.ContextMenu(handleCtxMenu)
 	if err := p.HandleRPC(os.Args[1]); err != nil {
 		log.Fatal(err.Error())
 	}
