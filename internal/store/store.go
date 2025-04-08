@@ -12,15 +12,15 @@ import (
 )
 
 type Store struct {
-	Path  string
-	Store map[string]string
-	Keys  []string
+	Path string
+	Data map[string]string
+	Keys []string
 }
 
 func New(path string) (*Store, error) {
 	s := &Store{
-		Path:  path,
-		Store: make(map[string]string),
+		Path: path,
+		Data: make(map[string]string),
 	}
 
 	data, err := os.ReadFile(path)
@@ -31,12 +31,12 @@ func New(path string) (*Store, error) {
 		return nil, err
 	}
 
-	err = yaml.Unmarshal(data, &s.Store)
+	err = yaml.Unmarshal(data, &s.Data)
 	if err != nil {
 		return nil, err
 	}
 
-	for k := range s.Store {
+	for k := range s.Data {
 		s.Keys = append(s.Keys, k)
 	}
 
@@ -57,14 +57,14 @@ func (s *Store) GetFuzzy(key string) []string {
 }
 
 func (s *Store) Set(key, value string) {
-	s.Store[key] = value
+	s.Data[key] = value
 	if !slices.Contains(s.Keys, key) {
 		s.Keys = append(s.Keys, key)
 	}
 }
 
 func (s *Store) Save() error {
-	data, err := yaml.Marshal(s.Store)
+	data, err := yaml.Marshal(s.Data)
 	if err != nil {
 		return err
 	}
