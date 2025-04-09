@@ -3,3 +3,7 @@ VERSION=0.1.0
 build:
 	@GOOS=windows GOARCH=amd64 go build -o ./bin/TextStash-$(VERSION)/ts.exe -v ./main.go
 	@cp ./assets/* ./bin/TextStash-$(VERSION)
+
+.PHONY: bundle
+bundle:
+	@zip -r ./bin/TextStash-$(VERSION).zip ./bin/TextStash-$(VERSION)
