@@ -6,4 +6,4 @@ build:
 
 .PHONY: bundle
 bundle:
-	@zip -r ./bin/TextStash-$(VERSION).zip ./bin/TextStash-$(VERSION)
+	@zip -r -j ./bin/TextStash-$(VERSION).zip ./bin/TextStash-$(VERSION)
