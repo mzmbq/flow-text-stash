@@ -1,0 +1,46 @@
+name: Build and publish release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: "assets/plugin.json"
+          prop_path: "Version"
+
+      - name: Echo Version
+        run: echo ${{ steps.version.outputs.prop }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "^1.23"
+
+      - name: Build and Bundle
+        run: |
+          set -e
+          make build
+          make bundle
+
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "bin/*.zip"
+          tag_name: "v${{steps.version.outputs.prop}}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
