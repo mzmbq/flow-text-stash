@@ -33,6 +33,7 @@ func New(s *store.Store) *TextStash {
 
 func (ts *TextStash) listAllStashes(req *flow.Request) *flow.Response {
 	res := flow.NewResponse(req)
+	res.Results = make([]*flow.Result, 0, len(ts.Store.Data))
 	for k, v := range ts.Store.Data {
 		res.AddResult(&flow.Result{
 			Title:    k,
@@ -56,6 +57,7 @@ func (ts *TextStash) handleQuery(req *flow.Request) *flow.Response {
 	matches := ts.Store.GetFuzzy(target)
 
 	// List matches
+	res.Results = make([]*flow.Result, 0, len(matches)+1)
 	for _, m := range matches {
 		val := ts.Store.Data[m]
 		res.AddResult(&flow.Result{
