@@ -38,7 +38,7 @@ func (ts *TextStash) listAllStashes(req *flow.Request) *flow.Response {
 		res.AddResult(&flow.Result{
 			Title:    k,
 			SubTitle: utils.Wrap(v),
-			IcoPath:  "pencil.png",
+			IcoPath:  IconCDN("pencil.png"),
 			RpcAction: &flow.JsonRpcAction{
 				Method:     "paste",
 				Parameters: []string{v},
@@ -63,7 +63,7 @@ func (ts *TextStash) handleQuery(req *flow.Request) *flow.Response {
 		res.AddResult(&flow.Result{
 			Title:    m,
 			SubTitle: utils.Wrap(val),
-			IcoPath:  "pencil.png",
+			IcoPath:  IconCDN("pencil.png"),
 			RpcAction: &flow.JsonRpcAction{
 				Method:     "paste",
 				Parameters: []string{val},
@@ -76,7 +76,7 @@ func (ts *TextStash) handleQuery(req *flow.Request) *flow.Response {
 		res.AddResult(&flow.Result{
 			Title:    fmt.Sprintf("Create a paste: %s", target),
 			SubTitle: "",
-			IcoPath:  "add.png",
+			IcoPath:  IconCDN("add.png"),
 			RpcAction: &flow.JsonRpcAction{
 				Method:     "create",
 				Parameters: []string{target},
@@ -133,4 +133,9 @@ func (ts *TextStash) handleCtxMenu(req *flow.Request) *flow.Response {
 	})
 
 	return res
+}
+
+// IconCDN returns the URL for an image hosted on the CDN.
+func IconCDN(icon string) string {
+	return fmt.Sprintf("https://cdn.jsdelivr.net/gh/mzmbq/flow-text-stash@master/assets/%s", icon)
 }
