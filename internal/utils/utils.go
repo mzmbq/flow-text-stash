@@ -5,9 +5,14 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func Wrap(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.SplitN(s, "\n", 2)[0]
+	s = strings.TrimSpace(s)
+
 	if len(s) < 20 {
 		return s
 	}
